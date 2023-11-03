@@ -1,6 +1,7 @@
 package main;
 
 import engine.io.ModelLoader;
+import games.testgame.TestGame;
 import org.lwjgl.glfw.GLFW;
 
 import engine.graphics.Mesh;
@@ -11,6 +12,7 @@ import engine.io.Window;
 import engine.maths.Vector3f;
 import engine.objects.Camera;
 import engine.objects.GameObject;
+import renderers.TerrainRenderer;
 
 public class Main implements Runnable {
     public Thread game;
@@ -21,7 +23,7 @@ public class Main implements Runnable {
 
     public Mesh mesh = ModelLoader.loadModel("resources/models/dragon.obj","resources/textures/minecraft.png");
 
-    public GameObject[] objects = new GameObject[500];
+    public GameObject[] objects = new GameObject[10];
 
     public GameObject object = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
 
@@ -36,7 +38,7 @@ public class Main implements Runnable {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/mainFragment.glsl");
         renderer = new Renderer(window, shader);
-        window.setBackgroundColor(1.0f, 1, 1);
+        window.setBackgroundColor(0.52f , 0.80f, 1.0f);
         window.create();
         mesh.create();
         shader.create();
@@ -78,6 +80,6 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
-        new Main().start();
+        new TestGame().start();
     }
 }
