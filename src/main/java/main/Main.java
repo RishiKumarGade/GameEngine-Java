@@ -3,18 +3,14 @@ package main;
 import engine.io.ModelLoader;
 import org.lwjgl.glfw.GLFW;
 
-import engine.graphics.Material;
 import engine.graphics.Mesh;
 import engine.graphics.Renderer;
 import engine.graphics.Shader;
-import engine.graphics.Vertex;
 import engine.io.Input;
 import engine.io.Window;
-import engine.maths.Vector2f;
 import engine.maths.Vector3f;
 import engine.objects.Camera;
 import engine.objects.GameObject;
-import renderers.TerrainRenderer;
 
 public class Main implements Runnable {
     public Thread game;
