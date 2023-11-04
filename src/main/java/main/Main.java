@@ -2,6 +2,7 @@ package main;
 
 import engine.io.ModelLoader;
 import games.testgame.TestGame;
+import games.testgame.TestGame2;
 import org.lwjgl.glfw.GLFW;
 
 import engine.graphics.Mesh;
@@ -37,7 +38,7 @@ public class Main implements Runnable {
     public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/mainFragment.glsl");
-        renderer = new Renderer(window, shader);
+        renderer = new Renderer(window);
         window.setBackgroundColor(0.52f , 0.80f, 1.0f);
         window.create();
         mesh.create();
@@ -67,7 +68,7 @@ public class Main implements Runnable {
 
     private void render() {
         for (int i = 0; i < objects.length; i++) {
-            renderer.renderMesh(objects[i], camera);
+            renderer.renderMesh(objects[i], camera, shader);
         }
 //        renderer.renderMesh(object, camera);
         window.swapBuffers();

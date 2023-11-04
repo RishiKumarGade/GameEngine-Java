@@ -1,14 +1,17 @@
 package engine.graphics;
 
 import org.lwjgl.system.MemoryUtil;
+import org.lwjglx.Sys;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
     private Vertex[] vertices;
+
     private int[] indices;
     private int vao,pbo,ibo,cbo,tbo;
     private Material material;
@@ -17,16 +20,19 @@ public class Mesh {
         this.vertices = vertices;
         this.material=material;
     }
+    public Mesh(Vertex[] vertices,int[] indices){
+        this.indices = indices;
+        this.vertices = vertices;
+    }
     public void create(){
 
-        material.create();
 
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
         FloatBuffer positionBuffer = MemoryUtil.memAllocFloat(vertices.length*3);
         float[] positionData = new float[vertices.length*3];
         for (int i = 0; i < vertices.length; i++){
-            positionData[i* 3] = vertices[i].getPosition ().getX();
+            positionData[i* 3] = vertices[i].getPosition().getX();
             positionData[i* 3 + 1] = vertices[i].getPosition ().getY();
             positionData[i* 3 + 2] = vertices[i].getPosition().getZ();
         }
@@ -34,26 +40,29 @@ public class Mesh {
         pbo = storeData(positionBuffer,0,3);
 
 
-//        FloatBuffer colorBuffer = MemoryUtil.memAllocFloat(vertices.length*3);
-//        float[] colorData = new float[vertices.length*3];
-//        for (int i = 0; i < vertices.length; i++){
-//            colorData[i* 3] = vertices[i].getColor().getX();
-//            colorData[i* 3 + 1] = vertices[i].getColor ().getY();
-//            colorData[i* 3 + 2] = vertices[i].getColor().getZ();
-//        }
-//        colorBuffer.put(colorData).flip();
-//        cbo = storeData(colorBuffer,1,3);
-
-
-        FloatBuffer textureBuffer = MemoryUtil.memAllocFloat(vertices.length*2);
-        float[] textureData = new float[vertices.length*2];
-        for (int i = 0; i < vertices.length; i++){
-            textureData[i* 2] = vertices[i].getTextureCoord().getX();
-            textureData[i* 2 + 1] = vertices[i].getTextureCoord().getY();
+        if(material != null) {
+            material.create();
+            FloatBuffer textureBuffer = MemoryUtil.memAllocFloat(vertices.length * 2);
+            float[] textureData = new float[vertices.length * 2];
+            for (int i = 0; i < vertices.length; i++) {
+                textureData[i * 2] = vertices[i].getTextureCoord().getX();
+                textureData[i * 2 + 1] = vertices[i].getTextureCoord().getY();
+            }
+            textureBuffer.put(textureData).flip();
+            tbo = storeData(textureBuffer, 2, 2);
         }
-        textureBuffer.put(textureData).flip();
-        tbo = storeData(textureBuffer,2,2);
-
+        else{
+            FloatBuffer colorBuffer = MemoryUtil.memAllocFloat(vertices.length*3);
+            float[] colorData = new float[vertices.length*3];
+            for (int i = 0; i < vertices.length; i++){
+                colorData[i* 3 ] = vertices[i].getColor().getX();
+                colorData[i* 3 +1] = vertices[i].getColor ().getY();
+                colorData[i* 3+2 ] = vertices[i].getColor().getZ();
+            }
+            colorBuffer.put(colorData).flip();
+            System.out.println(Arrays.toString(colorData));
+            cbo = storeData(colorBuffer,1,3);
+            }
 
         IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
         indicesBuffer.put(indices).flip();
@@ -89,7 +98,8 @@ public class Mesh {
         glDeleteBuffers(ibo);
         glDeleteBuffers(tbo);
         glDeleteVertexArrays(vao);
-        material.destroy();
+        if (material !=null)
+            material.destroy();
     }
 
     public Material getMaterial() {

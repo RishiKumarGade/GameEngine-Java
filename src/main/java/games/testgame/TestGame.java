@@ -14,7 +14,7 @@ public class TestGame implements Runnable {
     public Thread game;
     public Window window;
     public Renderer renderer;
-    public Shader shader;
+    public Shader shader,colorShader;
     public final int WIDTH = 1280, HEIGHT = 760;
 
     public Mesh  mesh = new Mesh(new Vertex[] {
@@ -94,7 +94,7 @@ public class TestGame implements Runnable {
     public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/mainFragment.glsl");
-        renderer = new Renderer(window, shader);
+        renderer = new Renderer(window);
         window.setBackgroundColor(0.52f , 0.80f, 1.0f);
         window.create();
         mesh.create();
@@ -104,12 +104,10 @@ public class TestGame implements Runnable {
             int x = i%100;
             int z = i/100;
             if(i==0)
-                objects[i] = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
+                objects[i] = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 2, 1), mesh);
             else
                 objects[i] = new GameObject(new Vector3f((float) (x), 0, (float) (-z)), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
         }
-
-
     }
 
     public void run() {
@@ -130,7 +128,7 @@ public class TestGame implements Runnable {
 
     private void render() {
         for (int i = 0; i < objects.length; i++) {
-            renderer.renderMesh(objects[i], camera);
+            renderer.renderMesh(objects[i], camera, shader);
         }
         window.swapBuffers();
     }

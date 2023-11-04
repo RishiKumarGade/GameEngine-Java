@@ -14,6 +14,7 @@ public class GameObject {
         this.mesh = mesh;
     }
 
+
     public Vector3f getPosition() {
         return position;
     }
