@@ -13,7 +13,6 @@ import engine.io.Window;
 import engine.maths.Vector3f;
 import engine.objects.Camera;
 import engine.objects.GameObject;
-import renderers.TerrainRenderer;
 
 public class Main implements Runnable {
     public Thread game;
@@ -44,10 +43,10 @@ public class Main implements Runnable {
         mesh.create();
         shader.create();
 
-        objects[0] = object;
         for (int i = 0; i < objects.length; i++) {
             objects[i] = new GameObject(new Vector3f((float) (Math.random() * 50 - 25), (float) (Math.random() * 50 - 25), (float) (Math.random() * 50 - 25)), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
         }
+        objects[0] = object;
     }
 
     public void run() {
@@ -63,14 +62,14 @@ public class Main implements Runnable {
 
     private void update() {
         window.update();
-        camera.update(object);
+        camera.update();
     }
 
     private void render() {
         for (int i = 0; i < objects.length; i++) {
-            renderer.renderMesh(objects[i], camera, shader);
+            renderer.renderMeshTexture(objects[i], camera, shader);
+//            objects[i].render(camera,);
         }
-//        renderer.renderMesh(object, camera);
         window.swapBuffers();
     }
 
@@ -81,6 +80,6 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
-        new TestGame().start();
+        new TestGame2().start();
     }
 }

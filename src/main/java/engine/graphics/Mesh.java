@@ -10,9 +10,9 @@ import java.util.Arrays;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
-    private Vertex[] vertices;
+    protected Vertex[] vertices;
 
-    private int[] indices;
+    protected int[] indices;
     private int vao,pbo,ibo,cbo,tbo;
     private Material material;
     public Mesh(Vertex[] vertices,int[] indices,Material material){

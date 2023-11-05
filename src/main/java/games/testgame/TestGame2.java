@@ -2,6 +2,7 @@ package games.testgame;
 
 import engine.graphics.*;
 import engine.io.Input;
+import engine.io.ModelLoader;
 import engine.io.Window;
 import engine.maths.Vector2f;
 import engine.maths.Vector3f;
@@ -9,50 +10,49 @@ import engine.objects.Camera;
 import engine.objects.GameObject;
 import org.lwjgl.glfw.GLFW;
 
-
-public class TestGame implements Runnable {
+public class TestGame2 implements Runnable {
     public Thread game;
     public Window window;
     public Renderer renderer;
-    public Shader shader,colorShader;
+    public Shader colorShader;
     public final int WIDTH = 1280, HEIGHT = 760;
 
     public Mesh  mesh = new Mesh(new Vertex[] {
             //Back face
-            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector3f(1.0f, 1.0f,0.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector3f(1.0f, 0.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector3f(0.0f, 1.0f,1.0f)),
 
             //Front face
-            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector3f(0.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector3f(1.0f, 0.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector3f(1.0f, 1.0f,0.0f)),
 
             //Right face
-            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector3f(1.0f, 0.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector3f(0.0f, 1.0f,1.0f)),
 
             //Left face
-            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
 
             //Top face
-            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f,  0.5f), new Vector3f(1.0f, 1.0f,0.0f)),
+            new Vertex(new Vector3f(-0.5f,  0.5f, -0.5f), new Vector3f(0.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f, -0.5f), new Vector3f(1.0f, 0.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f,  0.5f,  0.5f), new Vector3f(1.0f, 1.0f,0.0f)),
 
             //Bottom face
-            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector2f(0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector2f(0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector2f(1.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector2f(1.0f, 0.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f,  0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f(-0.5f, -0.5f, -0.5f), new Vector3f(1.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f, -0.5f), new Vector3f(0.0f, 1.0f,1.0f)),
+            new Vertex(new Vector3f( 0.5f, -0.5f,  0.5f), new Vector3f(1.0f, 0.0f,1.0f)),
     }, new int[] {
             //Back face
             0, 1, 3,
@@ -77,7 +77,8 @@ public class TestGame implements Runnable {
             //Bottom face
             20, 21, 23,
             23, 21, 22
-    }, new Material("resources/textures/minecraft.png"));
+    });
+
 
     public GameObject[] objects = new GameObject[10000];
 
@@ -92,12 +93,12 @@ public class TestGame implements Runnable {
 
     public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
-        shader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/mainFragment.glsl");
+        colorShader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/colorFragment.glsl");
         renderer = new Renderer(window);
         window.setBackgroundColor(0.52f , 0.80f, 1.0f);
         window.create();
         mesh.create();
-        shader.create();
+        colorShader.create();
         for (int i = 0; i < objects.length; i++) {
             int x = i%100;
             int z = i/100;
@@ -118,22 +119,20 @@ public class TestGame implements Runnable {
         }
         close();
     }
-
     private void update() {
         window.update();
         camera.update();
     }
-
     private void render() {
-        for (int i = 0; i < objects.length; i++) {
-            renderer.renderMeshTexture(objects[i], camera, shader);
+        for (GameObject gameObject : objects) {
+//            renderer.renderMeshwithColor(objects[i], camera, colorShader);
+            gameObject.render(camera, colorShader, window);
         }
         window.swapBuffers();
     }
-
     private void close() {
         window.destroy();
         mesh.destroy();
-        shader.destroy();
+        colorShader.destroy();
     }
 }

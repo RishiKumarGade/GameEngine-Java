@@ -31,6 +31,7 @@ public class Renderer {
         shader.setUniform("model", Matrix4f.transform(object.getPosition(), object.getRotation(), object.getScale()));
         shader.setUniform("view", Matrix4f.view(camera.getPosition(), camera.getRotation()));
         shader.setUniform("projection", window.getProjectionMatrix());
+//        GL11.glLineWidth(8.0f);
         GL11.glDrawElements(GL11.GL_TRIANGLES, object.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         shader.unbind();
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -39,7 +40,7 @@ public class Renderer {
         GL30.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
-    public void renderMesh(GameObject object, Camera camera, Shader shader) {
+    public void renderMeshTexture(GameObject object, Camera camera, Shader shader) {
         this.shader = shader;
         GL30.glBindVertexArray(object.getMesh().getVao());
         GL30.glEnableVertexAttribArray(0);
