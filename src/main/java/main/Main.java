@@ -1,8 +1,7 @@
 package main;
 
 import engine.io.ModelLoader;
-import games.testgame.TestGame;
-import games.testgame.TestGame2;
+import games.testgame.*;
 import org.lwjgl.glfw.GLFW;
 
 import engine.graphics.Mesh;
@@ -23,17 +22,15 @@ public class Main implements Runnable {
 
     public Mesh mesh = ModelLoader.loadModel("resources/models/dragon.obj","resources/textures/minecraft.png");
 
-    public GameObject[] objects = new GameObject[10];
+    public GameObject[] objects = new GameObject[10000];
 
     public GameObject object = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
 
     public Camera camera = new Camera(new Vector3f(0, 0, 1), new Vector3f(0, 0, 0));
-
     public void start() {
         game = new Thread(this, "game");
         game.start();
     }
-
     public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
         shader = new Shader("resources/shaders/mainVertex.glsl", "resources/shaders/mainFragment.glsl");
@@ -48,7 +45,6 @@ public class Main implements Runnable {
         }
         objects[0] = object;
     }
-
     public void run() {
         init();
         while (!window.shouldClose() && !Input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
@@ -62,17 +58,15 @@ public class Main implements Runnable {
 
     private void update() {
         window.update();
-        camera.update();
+        camera.update(objects[0]);
     }
 
     private void render() {
         for (int i = 0; i < objects.length; i++) {
             renderer.renderMeshTexture(objects[i], camera, shader);
-//            objects[i].render(camera,);
         }
         window.swapBuffers();
     }
-
     private void close() {
         window.destroy();
         mesh.destroy();
@@ -80,6 +74,6 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
-        new TestGame2().start();
+       new TestGame4().start();
     }
 }

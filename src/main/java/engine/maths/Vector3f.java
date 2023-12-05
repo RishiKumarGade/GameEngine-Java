@@ -1,5 +1,7 @@
 package engine.maths;
 
+import engine.shapes.ParametricMesh;
+
 public class Vector3f {
     private float x, y, z;
 
@@ -94,5 +96,10 @@ public class Vector3f {
 
     public void setZ(float z) {
         this.z = z;
+    }
+
+    public Vector3f normalize(double scale) {
+        double length = Math.sqrt(x * x + y * y + z * z);
+        return new Vector3f((float) (x / length * scale), (float) (y / length * scale), (float) (z / length * scale));
     }
 }

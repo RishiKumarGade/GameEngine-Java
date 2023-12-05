@@ -11,13 +11,19 @@ import org.lwjgl.opengl.GL30;
 
 public class GameObject {
     private Vector3f position,rotation,scale;
-    private Mesh mesh;
+    protected Mesh mesh;
 
     public GameObject(Vector3f position, Vector3f rotation, Vector3f scale, Mesh mesh) {
+        mesh.create();
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
         this.mesh = mesh;
+    }
+    protected GameObject(Vector3f position, Vector3f rotation, Vector3f scale){
+        this.position = position;
+        this.rotation = rotation;
+        this.scale = scale;
     }
 
 
@@ -49,9 +55,8 @@ public class GameObject {
         shader.setUniform("model", Matrix4f.transform(this.getPosition(), this.getRotation(), this.getScale()));
         shader.setUniform("view", Matrix4f.view(camera.getPosition(), camera.getRotation()));
         shader.setUniform("projection", window.getProjectionMatrix());
-//        GL11.glLineWidth(8.0f);
+//        GL11.glDrawArrays(GL11.GL_TRIANGLES,0,this.getMesh().getVertices().length);
         GL11.glDrawElements(GL11.GL_TRIANGLES, this.getMesh().getIndices().length, GL11.GL_UNSIGNED_INT, 0);
-
         shader.unbind();
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
         GL30.glDisableVertexAttribArray(0);

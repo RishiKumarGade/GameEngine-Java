@@ -79,9 +79,7 @@ public class TestGame implements Runnable {
             23, 21, 22
     }, new Material("resources/textures/minecraft.png"));
 
-    public GameObject[] objects = new GameObject[10000];
-
-    public GameObject object = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
+    public GameObject[] objects = new GameObject[1];
 
     public Camera camera = new Camera(new Vector3f(0, 0, 1), new Vector3f(0, 0, 0));
 
@@ -89,6 +87,7 @@ public class TestGame implements Runnable {
         game = new Thread(this, "game");
         game.start();
     }
+
 
     public void init() {
         window = new Window(WIDTH, HEIGHT, "Game");
@@ -121,16 +120,15 @@ public class TestGame implements Runnable {
 
     private void update() {
         window.update();
-        camera.update();
+        camera.update(objects[0]);
     }
 
     private void render() {
-        for (int i = 0; i < objects.length; i++) {
-            renderer.renderMeshTexture(objects[i], camera, shader);
+        for (GameObject gameObject : objects) {
+            renderer.renderMeshTexture(gameObject, camera, shader);
         }
         window.swapBuffers();
     }
-
     private void close() {
         window.destroy();
         mesh.destroy();

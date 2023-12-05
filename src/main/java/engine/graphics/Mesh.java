@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class Mesh {
     protected Vertex[] vertices;
 
-    protected int[] indices;
+    protected int[] indices = null;
     private int vao,pbo,ibo,cbo,tbo;
     private Material material;
     public Mesh(Vertex[] vertices,int[] indices,Material material){
@@ -24,9 +24,10 @@ public class Mesh {
         this.indices = indices;
         this.vertices = vertices;
     }
+    public Mesh(Vertex[] vertices){
+        this.vertices = vertices;
+    }
     public void create(){
-
-
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
         FloatBuffer positionBuffer = MemoryUtil.memAllocFloat(vertices.length*3);
@@ -60,16 +61,17 @@ public class Mesh {
                 colorData[i* 3+2 ] = vertices[i].getColor().getZ();
             }
             colorBuffer.put(colorData).flip();
-            System.out.println(Arrays.toString(colorData));
             cbo = storeData(colorBuffer,1,3);
             }
 
-        IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
-        indicesBuffer.put(indices).flip();
-        ibo = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,indicesBuffer,GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+        if(indices !=null){
+            IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
+            indicesBuffer.put(indices).flip();
+            ibo = glGenBuffers();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
     }
     public int storeData(FloatBuffer buffer,int index,int size){
         int bufferId = glGenBuffers();
